@@ -64,3 +64,19 @@ html:not(.js) .filters{display:none}
 .staff-card .hobby{font-size:12px;line-height:1.75;margin-top:7px;color:var(--sub)}
 @media(max-width:1050px){.staff-profiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 24px}.staff-card h2{font-size:32px}}
 @media(max-width:600px){.staff-profiles{grid-template-columns:minmax(0,1fr);row-gap:36px}.staff-card .staff-photo{aspect-ratio:1;max-height:440px}.staff-card figcaption{padding-top:12px}}
+
+.home-intro-links,.workplace-links{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px 24px}
+.philosophy-copy .jp-title{font-size:clamp(30px,3.3vw,54px);line-height:1.5;text-wrap:balance;max-width:14em}
+.salon-promises{margin-top:clamp(32px,4vw,62px)}
+.salon-promises h3{margin:0 0 16px;font:500 clamp(23px,2vw,32px)/1.5 var(--jp)}
+.salon-promises dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,3vw,44px)}
+.salon-promises dl>div{border-top:1px solid var(--hair);padding-top:14px}
+.salon-promises dt{font:500 clamp(17px,1.35vw,22px)/1.6 var(--jp)}
+.salon-promises dd,.community-note{font-size:14px;line-height:1.95;color:var(--sub)}
+.salon-promises dd{margin-top:8px}
+.community-note{margin-top:24px;padding-top:14px;border-top:1px solid var(--hair)}
+.community-note strong{margin-right:1em;color:var(--ink);white-space:nowrap}
+.owner-message{margin:20px 0 0;padding-left:16px;border-left:2px solid var(--clay)}
+.hiring-intro .owner-message p{font:500 18px/1.75 var(--jp);color:var(--ink)}
+.owner-message footer{margin-top:5px;color:var(--sub);font-size:12px}
+@media(max-width:740px){.salon-promises dl{grid-template-columns:1fr;gap:16px}.salon-promises dd{margin-top:4px}.community-note strong{display:block}.home-intro-links{gap:7px 17px}}

@@ -58,12 +58,29 @@ def addr():
     return '<dl class="facts">'+''.join('<div><dt>'+a+'</dt><dd>'+b+'</dd></div>' for a,b in [('所在地','〒420-0839<br>'+ADDRESS),('営業時間','10:00 – 20:00'),('最終受付','カット 18:30 ／ カラー・パーマ 18:00 ／ ストレート 17:00'),('定休日','月曜日（祝日の場合は翌火曜日）'),('電話',out(TEL,'054-251-4600')),('駐車場','近隣の駐車場をご利用ください。')])+'</dl>'
 def interior():
     return '<figure class="room"><div class="room-surface">'+original_img('IMG_9091-1.jpg','grace hair dressing 鷹匠の店内','original-photo')+'</div><figcaption><span>Salon interior</span>　grace hair dressing 鷹匠</figcaption></figure>'
+# The formal wording is from the salon's published 経営理念.
+SALON_PHILOSOPHY = '私たちに関わる人達を豊かにする'
+
+def philosophy():
+    return f'''<section id="philosophy" class="wrap section" aria-labelledby="philosophy-title">
+      <div class="philosophy"><div class="philosophy-copy"><span class="over">経営理念</span>
+        <h2 id="philosophy-title" class="jp-title">{SALON_PHILOSOPHY}</h2>
+        <p>「一生涯担当する気持ちでお客様と向き合います」。店頭のメニューBOOKに綴った、私たちの想いです。</p>
+        <p>次にお会いするまで、毎朝、鏡の前で気持ちよく過ごしていただきたい。普段のお手入れを伺い、ご自宅でも扱いやすい髪に仕上げます。</p>
+        {link('staff','スタッフを知る '+right,'under')}</div>{interior()}</div>
+      <div class="salon-promises"><h3>graceの3つの約束</h3><dl>
+        <div><dt>お客様の日常に寄り添う</dt><dd>いつもの服、朝の支度にかける時間、挑戦してみたい髪色。お一人おひとりのお話から、その方らしい「似合う」を一緒に探します。</dd></div>
+        <div><dt>仲間を尊重し、助け合う</dt><dd>互いの考えに耳を傾け、困ったときは手を貸す。お客様を迎えるスタッフにとっても、笑顔で過ごせるお店を目指します。</dd></div>
+        <div><dt>学んだ技術をお客様に届ける</dt><dd>髪や地肌の知識、カットやカラーの技術を磨き、新しいスタイルを発信します。誰が担当しても質の高い施術を届けるためです。</dd></div>
+      </dl><p class="community-note"><strong>社会貢献</strong>サロンの外にも目を向け、環境問題への取り組み、地域への貢献、支援活動を大切にしています。</p></div>
+    </section>'''
+
 def home():
-    return f'''<section class="hero"><div class="hero-copy"><div class="eyebrow"><span class="dash"></span> 静岡・鷹匠のヘアサロン</div><h1>横顔に、<br><em>似合う髪。</em></h1><p>頬をかすめる毛先も、耳にかけたときの丸みも。<br>あなたの髪の動きから、明日のスタイルを考えます。</p>{link('styles','スタイルを見つける '+right,'under')}</div><div class="hero-photos"><figure class="hero-main">{link('styles/nuance-bob',pic('style-2','柔らかなブラウンの外ハネニュアンスボブ',priority=True))}<figcaption><span>Nuance bob</span> / 外ハネニュアンスボブ</figcaption></figure><figure class="hero-side">{link('styles/round-short',pic('style-3','横から見たセンターパートショート',priority=True))}<figcaption>Round short</figcaption></figure></div></section>
+    return f'''<section class="hero"><div class="hero-copy"><div class="eyebrow"><span class="dash"></span> 静岡・鷹匠のヘアサロン</div><h1>横顔に、<br><em>似合う髪。</em></h1><p>頬をかすめる毛先も、耳にかけたときの丸みも。<br>あなたの髪の動きから、明日のスタイルを考えます。</p><div class="home-intro-links">{link('styles','スタイルを見つける '+right,'under')}<a class="under" href="#philosophy">graceの経営理念 <span aria-hidden="true">↓</span></a></div></div><div class="hero-photos"><figure class="hero-main">{link('styles/nuance-bob',pic('style-2','柔らかなブラウンの外ハネニュアンスボブ',priority=True))}<figcaption><span>Nuance bob</span> / 外ハネニュアンスボブ</figcaption></figure><figure class="hero-side">{link('styles/round-short',pic('style-3','横から見たセンターパートショート',priority=True))}<figcaption>Round short</figcaption></figure></div></section>
     <div class="info-ribbon"><div class="wrap"><span><i class="dot"></i> 新静岡駅・セノバ鷹匠口の正面</span><span class="hours-ribbon">営業時間 10:00 – 20:00</span>{link('contact','アクセス・地図 '+right)}</div></div>
     <section class="wrap section"><div class="section-top">{heading('Style book','ヘアスタイル')}{link('styles','すべてのスタイル '+right,'under')}</div><div class="stylegrid picks">{''.join(stylecard(i) for i in (4,1,6))}</div></section>
     <section class="menu-home"><div class="wrap split"><div>{heading('Menu','メニュー・料金')}<p>長さを変える日も、手触りを整える日も。</p>{link('menu','料金表をすべて見る '+right,'under')}</div><div class="menu-teaser">{''.join(link('menu',f'<span>{ja}<small>{en}</small></span><span class="teaser-price">¥{price}</span>{right}',frag=k) for k,ja,en,price in [('cut','カット','Cut','5,490〜'),('color','グロスカラー','Color','8,990〜'),('care','トリートメント','Treatment','4,500〜')])}</div></div></section>
-    <section class="wrap section philosophy">{interior()}<div><span class="over">graceの考え方</span><h2 class="jp-title">家に帰ってからが、<br>本当の仕上がり。</h2><p>朝、髪にかけられる時間。よく着る服の色。カウンセリングで交わす何気ない会話が、似合う髪への手がかりです。</p><p>サロンで見た形を、ご自宅でも楽しめるように。髪の乾かし方や顔まわりの整え方まで、担当のスタッフがお伝えします。</p>{link('staff','スタッフを知る '+right,'under')}</div></section>
+    {philosophy()}
     <section class="wrap news-home"><div class="section-top">{heading('Journal','サロンからのお知らせ')}{link('blog','記事一覧 '+right,'under')}</div>{newslist(3)}</section>
     <section class="visit"><div class="wrap split"><div>{heading('Visit us','ご来店案内')}<p>新静岡セノバの鷹匠口を出て、正面のビルの2階へ。</p></div><div class="visit-act">{reserve()}{link('contact','住所・営業時間・お問い合わせ '+right,'under')}</div></div></section>'''
 def menu_page():
@@ -142,10 +159,12 @@ def recruit():
       <h1>鷹匠で、<br>美容師として働く。</h1><p>新卒のアシスタントから、次のサロンを探しているスタイリストまで。graceの仕事と、あなたに合う働き方をご紹介します。</p>
       <a class="under" href="#positions">職種と給与を見る <span aria-hidden="true">↓</span></a></div>
       <figure>{original_img('IMG_9091-2.jpg','grace hair dressing 鷹匠の採用ページのサロン写真','hiring-cover',True)}</figure></section>
-    <nav class="hiring-nav" aria-label="採用ページの目次"><div class="wrap"><a href="#workplace">サロンを知る</a><a href="#positions">募集職種</a><a href="#benefits">福利厚生</a><a href="#entry">見学・応募</a></div></nav>
-    <section class="wrap hiring-section" id="workplace"><div class="hiring-intro"><div>{heading('Life at grace','graceで働く')}</div><div>
-      <h3>お客様を迎える時間も、技術を磨く時間も。</h3><p>朝礼では、その日の予約と施術の注意点をスタッフで共有。営業中はお客様の髪と向き合い、空いた時間にはウィッグで練習したり、先輩に手の動かし方を見てもらったりします。営業の終わりには施術内容を記録し、次の来店に備えます。</p>
-      {link('staff','一緒に働くスタッフを見る '+right,'under')}</div></div>
+    <nav class="hiring-nav" aria-label="採用ページの目次"><div class="wrap"><a href="#workplace">理念と働き方</a><a href="#positions">募集職種</a><a href="#benefits">福利厚生</a><a href="#entry">見学・応募</a></div></nav>
+    <section class="wrap hiring-section" id="workplace"><div class="hiring-intro"><div>{heading('Life at grace','理念と働き方')}</div><div>
+      <h3>{SALON_PHILOSOPHY}</h3>
+      <p>この理念でいう「人達」には、一緒に働く仲間も含まれます。朝礼ではその日にご来店されるお客様のことを共有し、営業の合間には先輩がウィッグを使った練習に付き合います。覚えた技術を次の仲間に手渡していく。それがgraceの仕事の一部です。</p>
+      <blockquote class="owner-message"><p>「何年先も専属の美容師でいられますように。」</p><footer>代表　YUICHIRO</footer></blockquote>
+      <div class="workplace-links">{link('','graceの3つの約束を読む '+right,'under','philosophy')}{link('staff','一緒に働くスタッフを見る '+right,'under')}</div></div></div>
       <dl class="hiring-numbers"><div><dt>スタッフの平均勤続年数</dt><dd>8.6<small>年</small></dd></div><div><dt>正社員の年間休日</dt><dd>110<small>日</small></dd></div><div><dt>パートの勤務日数</dt><dd><small>週</small>2〜6<small>日</small></dd></div></dl>
       <p class="source-note">勤続年数はサロン公表時点の実績です。</p></section>
     <section class="positions-band" id="positions"><div class="wrap hiring-section">{heading('Positions','職種別の募集要項')}
