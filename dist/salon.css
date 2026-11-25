@@ -9,3 +9,45 @@
 html:not(.js) .filters{display:none}
 .price-row dt small{display:block;font-size:11px;color:var(--sub);font-weight:400}
 .enquiry{margin-top:32px}.enquiry details{max-width:880px;border-block:1px solid var(--hair);margin-inline:auto}.enquiry summary{display:flex;gap:14px;align-items:baseline;padding:18px 0;list-style:none}.enquiry summary::-webkit-details-marker{display:none}.enquiry summary strong{font:500 clamp(18px,2vw,25px) var(--jp)}.enquiry summary>span:last-child{margin-left:auto}.enquiry details[open] summary>span:last-child{transform:rotate(45deg)}.enquiry form{padding:8px 0 24px}.enquiry form>p,.enquiry label,.enquiry button{font-size:13px}.enquiry form>p{margin:0 0 15px}.enquiry-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}.enquiry label{display:block;margin-bottom:12px}.enquiry label small{font-size:10px;color:var(--sub)}.enquiry input:not([type=checkbox]),.enquiry select,.enquiry textarea{display:block;width:100%;padding:11px;margin-top:5px;font:inherit;color:var(--ink);background:white;border:1px solid var(--hair);border-radius:0}.enquiry textarea{resize:vertical}.enquiry p[data-form-status]{margin:12px 0 0;color:var(--clay)}.enquiry button:disabled{opacity:.6}.enquiry .contact-use{color:var(--sub);font-size:12px}@media(max-width:600px){.enquiry-cols{grid-template-columns:1fr;gap:0}.enquiry summary .over{display:none}.enquiry input:not([type=checkbox]),.enquiry select,.enquiry textarea{font-size:16px}}
+
+/* The original salon wordmark and the hiring pages */
+.brand{align-items:center;flex:0 0 auto}
+.brand-logo{width:135px;height:54px;object-fit:contain;object-position:left center;mix-blend-mode:multiply;font:500 15px var(--serif)}
+.foot .brand{background:white;padding:3px 9px}
+.foot .brand-logo{width:145px;height:58px;mix-blend-mode:normal;color:var(--ink)}
+.hiring-hero{display:grid;grid-template-columns:minmax(0,.84fr) minmax(0,1.16fr);gap:clamp(32px,6vw,92px);align-items:center;padding-block:36px 46px}
+.hiring-copy h1{font:500 clamp(40px,4.7vw,76px)/1.35 var(--jp);margin:14px 0 24px}
+.hiring-copy p,.hiring-intro p,.position-copy p,.role-body p{font-size:14px;line-height:1.95;color:var(--sub)}
+.hiring-copy p{max-width:31em;margin-bottom:21px}
+.hiring-cover,.position-photo,.role-photo{background:var(--cream);display:block;width:100%;object-fit:cover}
+.hiring-cover{aspect-ratio:1.55}
+.hiring-nav{background:var(--dark);color:white}
+.hiring-nav .wrap{display:flex;gap:clamp(18px,4vw,70px);flex-wrap:wrap}
+.hiring-nav a{padding:13px 0;font-size:13px}.hiring-nav a:hover{text-decoration:underline}
+.hiring-section{padding-block:clamp(44px,6vw,96px)}
+.hiring-intro{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:clamp(30px,6vw,100px)}
+.hiring-intro h3,.pay-example h3{font:500 clamp(19px,1.8vw,29px)/1.6 var(--jp);margin-bottom:8px}
+.hiring-intro .under{margin-top:15px}.hiring-numbers{border-block:1px solid var(--hair);margin-top:30px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.hiring-numbers>div{margin:17px 0;padding:0 clamp(10px,3vw,52px);border-left:1px solid var(--hair)}
+.hiring-numbers>div:first-child{padding-left:0;border-left:0}.hiring-numbers dt{font-size:12px}.hiring-numbers dd{font:400 clamp(32px,4.5vw,64px)/1.1 var(--serif);margin-top:9px;color:var(--clay)}
+.hiring-numbers small{font:500 14px var(--jp);padding-inline:3px}
+.source-note,.role-body p.source-note{margin-top:12px;font-size:12px;line-height:1.75;color:var(--sub)}
+.positions-band{background:var(--cream)}.position-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.5vw,44px);margin-top:32px}
+.position-photo{aspect-ratio:1.6}.position-copy{padding:17px 0 13px}.position-copy>span{font:italic 17px var(--serif);color:var(--clay)}.position-copy h3{margin:4px 0;font:500 27px var(--jp)}
+.position-links .jobrow{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hair);padding:13px 1px;gap:8px}
+.position-links .jobrow:first-child{border-top:1px solid var(--hair)}.position-links .jobrow strong{display:block;font:600 16px var(--sans)}.position-links .jobrow small{display:block;font:400 12px/1.7 var(--sans);color:var(--sub);letter-spacing:0;margin-top:5px}
+.benefit-list>div{padding:14px 0;border-bottom:1px solid var(--hair)}.benefit-list>div:first-child{padding-top:0}.benefit-list h3{font-size:20px}
+.entry-band{background:var(--stone)}.entry-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:20px}.entry-actions .under{margin:0}.entry-form details{max-width:none}
+.role-photo{aspect-ratio:1.6;margin-bottom:15px}.role-nav{display:flex;gap:8px 16px;flex-wrap:wrap;margin:0 0 22px}.role-nav a{color:var(--clay);font-size:13px;border-bottom:1px solid}
+.role-body>section{margin-bottom:32px}.role-body section>p+p{margin-top:9px}.role-body .facts>div{align-items:baseline}.role-body .facts dd{line-height:1.85}
+.pay-example{background:var(--cream);padding:18px 22px;margin-top:16px}.pay-example h3{font-size:17px}.pay-example p{margin:0}
+@media(max-width:900px){.mast .brand-logo{width:110px;height:47px}}
+@media(max-width:740px){
+ .mast .brand-logo{width:103px;height:44px}.foot .brand-logo{width:107px;height:44px}
+ .hiring-hero,.hiring-intro,.position-grid{grid-template-columns:1fr}
+ .hiring-hero{padding-block:23px 27px;gap:20px}.hiring-copy h1{margin:9px 0 12px;font-size:clamp(35px,8vw,54px)}.hiring-cover{aspect-ratio:1.8}.hiring-copy p{margin-bottom:12px}
+ .hiring-intro{gap:19px}.hiring-nav .wrap{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.hiring-nav a{font-size:12px;padding:7px 0}
+ .hiring-numbers>div{padding-inline:8px}.hiring-numbers dt{font-size:10px}.hiring-numbers dd{font-size:31px}.hiring-numbers small{font-size:11px}
+ .position-grid{gap:32px}.position-photo{aspect-ratio:1.85}.position-copy{padding-block:11px}.role-photo{max-width:500px}
+ .hiring-section{padding-block:40px}.role-facts>div{grid-template-columns:minmax(80px,.65fr) minmax(0,1.35fr)}.role-body>section{margin-bottom:25px}
+}

@@ -3,6 +3,7 @@ import base64, gzip, io, json, re, zipfile
 from pathlib import Path
 from html import escape
 from PIL import Image
+from original_media import ORIGIN, UPLOADS, FILES
 from build import DIST, ROOT, build, pages
 
 
@@ -25,6 +26,9 @@ function renderPage(route, target='', initial=false){
     document.title=data[0]+'｜grace hair dressing 鷹匠';
     for(const image of document.querySelectorAll('img[data-photo]')) {
       image.src=photos[image.dataset.photo];
+    }
+    for(const image of document.querySelectorAll('img[data-original]')) {
+      image.src=photos[image.dataset.original] || image.dataset.originalUrl;
     }
     activeRoute=route;
     if(typeof reconcileContactForm==='function')reconcileContactForm();
@@ -68,6 +72,9 @@ def render_docs():
             return tag[:href.start(1)]+value+tag[href.end(1):]
         def photo(match):
             tag=match.group()
+            original=re.search(r'data-original="([^"]+)"',tag)
+            if original:
+                return re.sub(r' src="[^"]*"', ' data-original-url="'+ORIGIN+original[1]+'"',tag,count=1)
             return re.sub(r' src="[^"]*"','',tag, count=1) if 'data-photo=' in tag else tag
         html=re.sub(r'<a\b[^>]*>',anchor,html)
         html=re.sub(r'<img\b[^>]*>',photo,html)
@@ -85,6 +92,17 @@ def photo_urls(compact):
                 raw=data.getvalue()
         else:raw=path.read_bytes()
         images[path.stem]='data:image/webp;base64,'+base64.b64encode(raw).decode()
+    for name in FILES:
+        path=DIST/UPLOADS/name
+        if path.is_file():
+            if compact:
+                with Image.open(path) as photo:
+                    photo.thumbnail((300,150) if name=='rogo.jpg' else (320,230))
+                    data=io.BytesIO()
+                    photo.convert('RGB').save(data,'WEBP',quality=60,method=6)
+                    images[name]='data:image/webp;base64,'+base64.b64encode(data.getvalue()).decode()
+            else:
+                images[name]='data:image/jpeg;base64,'+base64.b64encode(path.read_bytes()).decode()
     return images
 def jsdata(data):
     return json.dumps(data,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')

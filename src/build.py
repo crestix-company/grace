@@ -1,7 +1,9 @@
 from pathlib import Path
 from html import escape
 import json, os, re, posixpath, urllib.parse
-from content import BOOK, HPB, FORM, TEL, ADDRESS, STYLE, MENU, JOBS, NEWS
+from recruitment import BENEFITS, GROUPS, ROLES
+from original_media import source as original_source
+from content import BOOK, HPB, FORM, TEL, ADDRESS, STYLE, MENU, NEWS
 
 ROOT=Path(__file__).resolve().parents[1]
 DIST=ROOT/'dist'
@@ -25,12 +27,16 @@ def pic(name,alt,cls='',priority=False):
     with Image.open(DIST/'assets'/(name+'.webp')) as f: w,h=f.size
     live='fetchpriority="high"' if priority else 'loading="lazy"'
     return f'<img src="{asset("assets/"+name+".webp")}" data-photo="{name}" alt="{escape(alt,quote=True)}" class="{cls}" width="{w}" height="{h}" decoding="async" {live}>'
-def brand():
-    return link('','<span class="word" lang="en">grace</span><span class="brand-sub">HAIR DRESSING</span>','brand')
+def original_img(name,alt,cls,priority=False):
+    url = original_source(name,DIST,asset)
+    loading = 'fetchpriority="high"' if priority else 'loading="lazy"'
+    return f'<img class="{cls}" data-original="{name}" src="{url}" alt="{escape(alt,quote=True)}" decoding="async" {loading}>'
+def brand(footer=False):
+    return link('',original_img('rogo.jpg','grace hair dressing トップへ','brand-logo',not footer),'brand')
 def reserve(label='空席確認・WEB予約'):
     return out(BOOK,label+arrow,'cta')
 def active(parent):
-    return current==parent or (parent=='styles' and current.startswith('styles/')) or (parent=='job-offer' and current in [j[0] for j in JOBS])
+    return current==parent or (parent=='styles' and current.startswith('styles/')) or (parent=='job-offer' and current in ROLES)
 def navitem(k,en,ja,footer=False):
     return f'<a data-go="{k}" href="{path(k)}"'+(' aria-current="page"' if current==k else '')+(' class="active"' if active(k) else '')+f'><span lang="en">{en}</span><small>{ja}</small></a>'
 def header():
@@ -38,7 +44,7 @@ def header():
 def crumb(name,parent=None):
     return '<nav class="crumb wrap" aria-label="パンくず">'+link('','Top')+'<span>/</span>'+(link(parent[0],parent[1])+'<span>/</span>' if parent else '')+f'<span aria-current="page">{name}</span></nav>'
 def footer():
-    return f'''<footer class="foot"><div class="wrap"><div class="foot-main"><div>{brand()}<p>静岡・鷹匠のヘアサロン</p></div><div><p>〒420-0839<br>{ADDRESS}</p>{out(TEL,'054-251-4600','foot-tel')}</div><nav aria-label="フッターメニュー">{''.join(link(k,ja) for k,en,ja in nav)}</nav></div><div class="foot-end"><span>© grace hair dressing</span>{link('','トップページへ '+right)}</div></div></footer>'''
+    return f'''<footer class="foot"><div class="wrap"><div class="foot-main"><div>{brand(True)}<p>静岡・鷹匠のヘアサロン</p></div><div><p>〒420-0839<br>{ADDRESS}</p>{out(TEL,'054-251-4600','foot-tel')}</div><nav aria-label="フッターメニュー">{''.join(link(k,ja) for k,en,ja in nav)}</nav></div><div class="foot-end"><span>© grace hair dressing</span>{link('','トップページへ '+right)}</div></div></footer>'''
 def intro(en,ja,desc):
     return f'<div class="page-title wrap"><div><div class="over">{ja}</div><h1 lang="en">{en}</h1></div><p>{desc}</p></div>'
 def heading(en,ja):
@@ -50,12 +56,8 @@ def newslist(n):
     return '<div class="newslist">'+''.join(out(HPB+'blog/'+key+'.html',f'<time datetime="{d.replace(".","-")}">{d}</time><span class="news-cat">{cat}</span><span class="news-name">{title}</span>{arrow}','newsrow') for d,cat,title,who,blurb,key in NEWS[:n])+'</div>'
 def addr():
     return '<dl class="facts">'+''.join('<div><dt>'+a+'</dt><dd>'+b+'</dd></div>' for a,b in [('所在地','〒420-0839<br>'+ADDRESS),('営業時間','10:00 – 20:00'),('最終受付','カット 18:30 ／ カラー・パーマ 18:00 ／ ストレート 17:00'),('定休日','月曜日（祝日の場合は翌火曜日）'),('電話',out(TEL,'054-251-4600')),('駐車場','近隣の駐車場をご利用ください。')])+'</dl>'
-ORIGINAL = 'https://grace-2012.com/wgc1/wp-content/uploads/2023/07/'
 def interior():
-    img='IMG_9091-1.jpg'
-    local='wgc1/wp-content/uploads/2023/07/'+img
-    url=asset(local) if (DIST/local).is_file() else ORIGINAL+img
-    return f'<figure class="room"><div class="room-surface"><div class="room-fallback"><span>grace <em>hair dressing</em></span><small>新静岡セノバ 鷹匠口正面 ／ 2F</small></div><img class="original-photo" src="{url}" alt="木の色と落ち着いた照明でまとめたgraceの店内" loading="lazy" referrerpolicy="no-referrer" onerror="this.hidden=true"></div><figcaption><span>Salon interior</span>　grace hair dressing 鷹匠</figcaption></figure>'
+    return '<figure class="room"><div class="room-surface">'+original_img('IMG_9091-1.jpg','grace hair dressing 鷹匠の店内','original-photo')+'</div><figcaption><span>Salon interior</span>　grace hair dressing 鷹匠</figcaption></figure>'
 def home():
     return f'''<section class="hero"><div class="hero-copy"><div class="eyebrow"><span class="dash"></span> 静岡・鷹匠のヘアサロン</div><h1>横顔に、<br><em>似合う髪。</em></h1><p>頬をかすめる毛先も、耳にかけたときの丸みも。<br>あなたの髪の動きから、明日のスタイルを考えます。</p>{link('styles','スタイルを見つける '+right,'under')}</div><div class="hero-photos"><figure class="hero-main">{link('styles/nuance-bob',pic('style-2','柔らかなブラウンの外ハネニュアンスボブ',priority=True))}<figcaption><span>Nuance bob</span> / 外ハネニュアンスボブ</figcaption></figure><figure class="hero-side">{link('styles/round-short',pic('style-3','横から見たセンターパートショート',priority=True))}<figcaption>Round short</figcaption></figure></div></section>
     <div class="info-ribbon"><div class="wrap"><span><i class="dot"></i> 新静岡駅・セノバ鷹匠口の正面</span><span class="hours-ribbon">営業時間 10:00 – 20:00</span>{link('contact','アクセス・地図 '+right)}</div></div>
@@ -89,11 +91,81 @@ def contact():
     return crumb('店舗・お問い合わせ')+intro('Access','店舗・お問い合わせ','新静岡駅で降りて、鷹匠口へ。<br>道路を挟んだ向かいのビル、2階がgraceです。')+f'''<div class="wrap access-grid"><div class="direction"><span class="over">新静岡駅からの道順</span><ol><li><small>静岡鉄道</small><strong>新静岡駅</strong></li><li><small>新静岡セノバ</small><strong>鷹匠口を出て正面へ</strong></li><li><small>サングリアの入るビル</small><strong>エスパシオ鷹匠 2階</strong></li></ol>{out(MAP,'Google マップで道順を開く '+arrow,'under')}</div><div>{heading('Salon info','店舗情報')}{addr()}</div></div>
     <div class="wrap salon-atmos">{interior()}<div><span class="over">店内のご案内</span><h2 class="jp-title">鷹匠の街から、<br>ひと息つける場所へ。</h2><p>茶色を基調にした店内に、穏やかな照明とBGM。外からの視線が届きにくい席で、ゆっくりとお過ごしいただけます。</p></div></div><section class="wrap contactbox"><div>{heading('Contact','ご予約・お問い合わせ')}<p>空席確認・ご予約はネットで。予約内容の変更や、<br>ご来店前のご相談は店舗へお電話ください。</p></div><div class="contact-actions">{reserve()}{out(TEL,'電話する　054-251-4600','stroke')}{out(FORM,'お問い合わせフォームを開く '+arrow,'under legacy-form')}</div></section>
     {(ROOT/'src'/'contact_form.html').read_text()}<section class="wrap faq"><h2>ご来店前のよくあるご質問</h2>{''.join(f'<details><summary>{q}</summary><p>{a}</p></details>' for q,a in [('髪型が決まっていなくても相談できますか？','はい。普段のスタイリングや気になる部分を伺いながら形を決めていきます。気になる写真があればお持ちください。'),('前髪だけでも予約できますか？','前髪カットをご用意しています。店舗へお電話ください。'),('車で来店できますか？','専用駐車場はございません。お近くの駐車場をご利用ください。')])}</section>'''
+def job_facts(rows):
+    return '<dl class="facts role-facts">'+''.join(f'<div><dt>{label}</dt><dd>{value}</dd></div>' for label,value in rows)+'</dl>'
+
+def recruit_category(group):
+    ja,en,photo,description,slugs = group
+    jobs = []
+    for slug in slugs:
+        role = ROLES[slug]
+        jobs.append(link(slug, f'<span><strong>{role["name"]}</strong><small>{role["pay"]}</small></span>{right}', 'jobrow'))
+    return f'''<article class="position-group">
+      {original_img(photo, ja+'の募集案内に掲載されたgraceの写真','position-photo')}
+      <div class="position-copy"><span lang="en">{en}</span><h3>{ja}</h3><p>{description}</p></div>
+      <div class="position-links">{''.join(jobs)}</div></article>'''
+
+def entry_form():
+    form = (ROOT/'src'/'contact_form.html').read_text()
+    options = ''.join(f'<option>{r["name"]}</option>' for r in ROLES.values())
+    form = form.replace('class="wrap enquiry"', 'class="enquiry entry-form"').replace('<details>', '<details open>')
+    form = form.replace('Contact form', 'Entry form').replace('フォームで相談する', '応募・見学フォーム')
+    form = form.replace('予約や当日の変更は店舗へお電話ください。','希望する職種と、応募・見学についてお聞かせください。')
+    start = form.index('<label>ご相談の種類')
+    end = form.index('</label>',start) + len('</label>')
+    form = form[:start] + f'<input type="hidden" name="subject" value="採用・見学"><label>希望職種 <small>必須</small><select name="role" required><option value="">職種を選んでください</option>{options}<option>まずは見学を希望</option></select></label>' + form[end:]
+    return form.replace('お問い合わせ内容','応募・見学のご希望').replace('maxlength="2000"','maxlength="1900"')
+
 def recruit():
-    return crumb('採用情報')+intro('Recruit','採用情報','お客様の髪の変化を、次の来店、その次まで見届ける。<br>そんな働き方を鷹匠で一緒に。')+f'''<div class="recruit-band"><div class="wrap split"><div><span class="over">graceで働く</span><h2 class="jp-title">技術は、人から<br>人へ。</h2></div><div><p>先輩のカウンセリングを近くで聞く。営業の合間にウィッグを手に取る。graceでは、お客様をお迎えする日々の中に、次の技術を学ぶ時間があります。</p><p>カラーやケアを深めたい方も、お客様と長く付き合える美容師を目指す方も、まずはサロンの雰囲気に触れてみてください。</p>{link('staff','一緒に働くスタッフ '+right,'under')}</div></div></div><section class="wrap jobs">{heading('Positions','職種別の募集要項')}<div>{''.join(link(k,f'<small>{contract}</small><strong>{name}</strong>{right}','jobrow') for k,name,contract,*rest in JOBS)}</div><div class="endbook">{out(WORK,'最新の求人・応募受付状況 '+arrow,'cta')}</div></section>'''
-def jobpage(job):
-    k,name,contract,lead,detail,qual,pay,time=job
-    return crumb(name,('job-offer','採用情報'))+f'''<div class="wrap jobdetail"><aside><span class="over">Recruit ／ {contract}</span><h1>{name}</h1><p>{lead}</p>{out(WORK,'募集状況を確認・応募 '+arrow,'cta')}</aside><article><h2>担当する仕事</h2><p>{detail}</p><h2>募集要項</h2><dl class="facts">{''.join(f'<div><dt>{t}</dt><dd>{v}</dd></div>' for t,v in [('雇用形態',contract),('応募資格',qual),('給与の目安',pay),('勤務',time),('勤務地','grace hair dressing 鷹匠<br>'+ADDRESS)])}</dl><p class="fine">採用条件や受付状況は求人ごとに異なります。応募前に最新の募集票をご確認ください。</p><h2>見学・お問い合わせ</h2><p>ご希望の職種と見学希望日を採用担当までお知らせください。</p>{out(TEL,'054-251-4600','under')}</article></div><div class="wrap spread-foot">{link('job-offer','← 募集職種の一覧へ')}</div>'''
+    benefits = ''.join(f'<div><h3>{title}</h3><p>{description}</p></div>' for title,description in BENEFITS)
+    return crumb('採用情報') + f'''
+    <section class="wrap hiring-hero"><div class="hiring-copy"><span class="over" lang="en">Recruit</span>
+      <h1>鷹匠で、<br>美容師として働く。</h1><p>新卒のアシスタントから、次のサロンを探しているスタイリストまで。graceの仕事と、あなたに合う働き方をご紹介します。</p>
+      <a class="under" href="#positions">職種と給与を見る <span aria-hidden="true">↓</span></a></div>
+      <figure>{original_img('IMG_9091-2.jpg','grace hair dressing 鷹匠の採用ページのサロン写真','hiring-cover',True)}</figure></section>
+    <nav class="hiring-nav" aria-label="採用ページの目次"><div class="wrap"><a href="#workplace">サロンを知る</a><a href="#positions">募集職種</a><a href="#benefits">福利厚生</a><a href="#entry">見学・応募</a></div></nav>
+    <section class="wrap hiring-section" id="workplace"><div class="hiring-intro"><div>{heading('Life at grace','graceで働く')}</div><div>
+      <h3>お客様を迎える時間も、技術を磨く時間も。</h3><p>朝礼では、その日の予約と施術の注意点をスタッフで共有。営業中はお客様の髪と向き合い、空いた時間にはウィッグで練習したり、先輩に手の動かし方を見てもらったりします。営業の終わりには施術内容を記録し、次の来店に備えます。</p>
+      {link('staff','一緒に働くスタッフを見る '+right,'under')}</div></div>
+      <dl class="hiring-numbers"><div><dt>スタッフの平均勤続年数</dt><dd>8.6<small>年</small></dd></div><div><dt>正社員の年間休日</dt><dd>110<small>日</small></dd></div><div><dt>パートの勤務日数</dt><dd><small>週</small>2〜6<small>日</small></dd></div></dl>
+      <p class="source-note">勤続年数はサロン公表時点の実績です。</p></section>
+    <section class="positions-band" id="positions"><div class="wrap hiring-section">{heading('Positions','職種別の募集要項')}
+      <div class="position-grid">{''.join(recruit_category(group) for group in GROUPS)}</div>
+      <p class="source-note">金額はサロンの募集要項に基づきます。最新の募集枠は応募窓口でご確認ください。各職種の詳細では、手当・勤務時間・応募資格をご覧いただけます。</p></div></section>
+    <section class="wrap hiring-section" id="benefits"><div class="hiring-intro"><div>{heading('Benefits','福利厚生・休暇')}</div><div class="benefit-list">
+      <div><h3>休日と休暇</h3><p>正社員は月8〜9日休み。年末年始のほか、年3日のリフレッシュ休暇、産前産後・育児・慶弔休暇があります。</p></div>
+      <div><h3>社会保険</h3><p>正社員は社会保険を完備。パートの方は勤務条件に応じて適用されます。</p></div>{benefits}</div></div></section>
+    <section class="entry-band" id="entry"><div class="wrap hiring-section"><div class="hiring-intro"><div>{heading('Entry','サロン見学・応募')}</div><div><h3>まずは、お店を見に来ませんか。</h3>
+      <p>見学のご相談はお電話で承ります。希望職種とご都合のよい日時をお知らせください。オンライン応募は求人票から受け付けています。</p><div class="entry-actions">{out(WORK,'求人票を確認して応募 '+arrow,'cta')}{out(TEL,'電話で相談　054-251-4600','under')}</div></div></div>
+      {entry_form()}</div></section>'''
+
+def jobpage(slug):
+    role = ROLES[slug]
+    lead,detail = role['lead'],role['detail']
+    group = next(g for g in GROUPS if slug in g[4])
+    name = role['name']
+    terms = [('給与',role['pay']+'（'+role['pay_basis']+'）')]
+    if role.get('board_pay'):
+        terms += [('求人媒体での掲載例', role['board_pay'])]
+    terms += [('手当',role['allowance']),('賞与・昇給',role['bonus'])]
+    schedule = [('勤務時間・日数',role['hours']),('残業',role['overtime']),('休日',role['days']),('休暇・家庭との両立',role['leave'])]
+    benefits = [('保険',role['insurance'])]+list(BENEFITS)
+    conditions = [('雇用形態',role['contract']),('資格・経験',role['qualification']),('試用期間','なし'),('勤務地','grace hair dressing 鷹匠<br>'+ADDRESS)]
+    source_note = ('給与・手当の欄はサロンの公式募集要項に基づきます。HOT PEPPER Beauty WORKでは別条件の掲載例があります。応募時は希望する募集枠の求人票をご確認ください。' if 'board_pay' in role else '金額・制度はサロン公表の募集要項によります。募集状況と適用条件は、応募前にご確認ください。')
+    example = ('<aside class="pay-example"><h3>'+('正社員登用' if slug=='assistant' else 'スタッフの支給例')+'</h3><p>'+role['example']+'</p></aside>') if role.get('example') else ''
+    return crumb(name,('job-offer','採用情報'))+f'''
+    <div class="wrap jobdetail"><aside class="role-summary"><span class="over">{role['group']} ／ {role['contract']}</span><h1>{name}</h1><p>{lead}</p>
+      {original_img(group[2],group[0]+'のサロン写真','role-photo')}
+      <div class="role-nav"><a href="#pay">給与・手当</a><a href="#hours">勤務・休暇</a><a href="#conditions">応募条件</a></div>
+      {link('job-offer','見学・応募の窓口へ '+right,'cta','entry')}</aside>
+      <article class="role-body"><section><h2>担当する仕事・研修</h2><p>{detail}</p><p>{role['training']}</p></section>
+      <section id="pay"><h2>給与・手当</h2>{job_facts(terms)}<p class="source-note">{source_note}</p>{example}</section>
+      <section id="hours"><h2>勤務時間・休日</h2>{job_facts(schedule)}</section>
+      <section><h2>福利厚生</h2>{job_facts(benefits)}</section>
+      <section id="conditions"><h2>応募条件</h2>{job_facts(conditions)}</section>
+      <div class="entry-actions">{out(WORK,'最新の求人・応募受付 '+arrow,'cta')}{out(TEL,'採用担当へ電話する','under')}</div></article></div>
+      <div class="wrap spread-foot">{link('job-offer','← すべての募集職種へ',frag='positions')}{link('job-offer','見学・応募 '+right,frag='entry')}</div>'''
+
 def emit(route,title,desc,render):
     global current
     current=route
@@ -116,5 +188,6 @@ def build():
     emit('blog','お知らせ・サロン日記','graceスタッフによるスタイル紹介や日々のサロンの記録。',journal)
     emit('contact','店舗・お問い合わせ','営業時間、最終受付、電話、オンライン予約、新静岡駅からの道順。',contact)
     emit('job-offer','採用情報','grace hair dressing 鷹匠の採用情報。職種別の募集要項と見学・応募窓口。',recruit)
-    for job in JOBS:emit(job[0],job[1]+'の募集',job[3],lambda job=job:jobpage(job))
+    for slug,role in ROLES.items():
+        emit(slug,role['name']+'の募集',role['lead'],lambda slug=slug:jobpage(slug))
 if __name__=='__main__': build()

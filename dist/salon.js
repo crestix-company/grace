@@ -48,6 +48,10 @@ async function reconcileContactForm() {
     if(demo){status.textContent='入力内容を確認しました。店舗には送信されていません。';return;}
     ticket ||= crypto.randomUUID();
     const data=Object.fromEntries(new FormData(form));
+    if (data.role) {
+      data.message='希望職種：'+data.role+'\n'+data.message;
+      delete data.role;
+    }
     data.ticket=ticket;
     data.consent=form.elements.consent.checked;
     button.disabled=true;status.textContent='送信中です。';
