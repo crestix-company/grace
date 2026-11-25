@@ -67,3 +67,26 @@ async function reconcileContactForm() {
   });
 }
 reconcileContactForm();
+
+let scrollRevealObserver;
+
+function observeScrollReveals() {
+  scrollRevealObserver?.disconnect();
+  if (!('IntersectionObserver' in window) || !window.matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+
+  scrollRevealObserver = new IntersectionObserver((entries, observer) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('scroll-enter');
+        observer.unobserve(entry.target);
+      }
+    }
+  });
+
+  const elements = document.querySelectorAll(
+    'main .section-top, main .stylecard, main .philosophy-copy, main .room, main .staff-card, main .position-group, main .price-section > h2'
+  );
+  for (const element of elements) scrollRevealObserver.observe(element);
+}
+
+if (!document.getElementById('site-data')) observeScrollReveals();

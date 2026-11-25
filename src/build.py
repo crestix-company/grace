@@ -1,5 +1,6 @@
 from pathlib import Path
 from html import escape
+from hashlib import sha256
 import json, os, re, posixpath, urllib.parse
 from recruitment import BENEFITS, GROUPS, ROLES
 from original_media import source as original_source
@@ -15,6 +16,9 @@ current=''
 def path(route):
     return posixpath.relpath((route+'/' if route else '')+'index.html', current or '.')
 def asset(name): return posixpath.relpath(name,current or '.')
+def versioned_asset(name):
+    version = sha256((DIST/name).read_bytes()).hexdigest()[:10]
+    return f'{asset(name)}?v={version}'
 def link(route,body,cls='',frag=''):
     return f'<a href="{path(route)}{("#"+frag) if frag else ""}" data-go="{route}" class="{cls}">{body}</a>'
 def out(url,body,cls=''):
@@ -76,7 +80,7 @@ def philosophy():
     </section>'''
 
 def home():
-    return f'''<section class="hero"><div class="hero-copy"><div class="eyebrow"><span class="dash"></span> 静岡・鷹匠のヘアサロン</div><h1>横顔に、<br><em>似合う髪。</em></h1><p>頬をかすめる毛先も、耳にかけたときの丸みも。<br>あなたの髪の動きから、明日のスタイルを考えます。</p><div class="home-intro-links">{link('styles','スタイルを見つける '+right,'under')}<a class="under" href="#philosophy">graceの経営理念 <span aria-hidden="true">↓</span></a></div></div><div class="hero-photos"><figure class="hero-main">{link('styles/nuance-bob',pic('style-2','柔らかなブラウンの外ハネニュアンスボブ',priority=True))}<figcaption><span>Nuance bob</span> / 外ハネニュアンスボブ</figcaption></figure><figure class="hero-side">{link('styles/round-short',pic('style-3','横から見たセンターパートショート',priority=True))}<figcaption>Round short</figcaption></figure></div></section>
+    return f'''<section class="hero"><div class="hero-copy"><div class="eyebrow"><span class="dash"></span> 静岡・鷹匠のヘアサロン</div><h1><span class="hero-line">横顔に、</span><br><em class="hero-line">似合う髪。</em></h1><p>頬をかすめる毛先も、耳にかけたときの丸みも。<br>あなたの髪の動きから、明日のスタイルを考えます。</p><div class="home-intro-links">{link('styles','スタイルを見つける '+right,'under')}<a class="under" href="#philosophy">graceの経営理念 <span aria-hidden="true">↓</span></a></div></div><div class="hero-photos"><figure class="hero-main">{link('styles/nuance-bob',pic('style-2','柔らかなブラウンの外ハネニュアンスボブ',priority=True))}<figcaption><span>Nuance bob</span> / 外ハネニュアンスボブ</figcaption></figure><figure class="hero-side">{link('styles/round-short',pic('style-3','横から見たセンターパートショート',priority=True))}<figcaption>Round short</figcaption></figure></div></section>
     <div class="info-ribbon"><div class="wrap"><span><i class="dot"></i> 新静岡駅・セノバ鷹匠口の正面</span><span class="hours-ribbon">営業時間 10:00 – 20:00</span>{link('contact','アクセス・地図 '+right)}</div></div>
     <section class="wrap section"><div class="section-top">{heading('Style book','ヘアスタイル')}{link('styles','すべてのスタイル '+right,'under')}</div><div class="stylegrid picks">{''.join(stylecard(i) for i in (4,1,6))}</div></section>
     <section class="menu-home"><div class="wrap split"><div>{heading('Menu','メニュー・料金')}<p>長さを変える日も、手触りを整える日も。</p>{link('menu','料金表をすべて見る '+right,'under')}</div><div class="menu-teaser">{''.join(link('menu',f'<span>{ja}<small>{en}</small></span><span class="teaser-price">¥{price}</span>{right}',frag=k) for k,ja,en,price in [('cut','カット','Cut','5,490〜'),('color','グロスカラー','Color','8,990〜'),('care','トリートメント','Treatment','4,500〜')])}</div></div></section>
@@ -213,7 +217,7 @@ def emit(route,title,desc,render):
     structured={'@context':'https://schema.org','@type':'HairSalon','name':'grace hair dressing 鷹匠','telephone':'+81-54-251-4600','address':{'@type':'PostalAddress','postalCode':'420-0839','addressRegion':'静岡県','addressLocality':'静岡市葵区','streetAddress':'鷹匠1-7-13 エスパシオ鷹匠2B','addressCountry':'JP'}}
     schema='<script type="application/ld+json">'+json.dumps(structured,ensure_ascii=False)+'</script>' if not route else ''
     html=f'''<!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f8f6ef"><title>{page_title}</title><meta name="description" content="{escape(desc,quote=True)}"><meta property="og:type" content="website"><meta property="og:locale" content="ja_JP"><meta property="og:title" content="{page_title}"><meta property="og:description" content="{escape(desc,quote=True)}"><link rel="icon" href="{asset('favicon.svg')}"><link rel="stylesheet" href="{asset('salon.css')}"><script defer src="{asset('salon.js')}"></script>{schema}</head><body>{body}</body></html>'''
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f8f6ef"><title>{page_title}</title><meta name="description" content="{escape(desc,quote=True)}"><meta property="og:type" content="website"><meta property="og:locale" content="ja_JP"><meta property="og:title" content="{page_title}"><meta property="og:description" content="{escape(desc,quote=True)}"><link rel="icon" href="{asset('favicon.svg')}"><link rel="stylesheet" href="{versioned_asset('salon.css')}"><script defer src="{versioned_asset('salon.js')}"></script>{schema}</head><body>{body}</body></html>'''
     dest=DIST/route/'index.html'
     dest.parent.mkdir(parents=True,exist_ok=True)
     dest.write_text(html)

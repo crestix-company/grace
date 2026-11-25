@@ -32,6 +32,7 @@ function renderPage(route, target='', initial=false){
     }
     activeRoute=route;
     if(typeof reconcileContactForm==='function')reconcileContactForm();
+    observeScrollReveals();
     if(!initial) document.querySelector('main').focus({preventScroll:true});
   }
   if(target){
