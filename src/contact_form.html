@@ -1,0 +1,15 @@
+<section class="wrap enquiry" aria-labelledby="enquiry-title" data-enquiry hidden>
+  <details><summary><span class="over">Contact form</span><strong id="enquiry-title">フォームで相談する</strong><span aria-hidden="true">＋</span></summary>
+  <form data-contact-form>
+    <p data-form-note>予約や当日の変更は店舗へお電話ください。</p>
+    <div class="enquiry-cols"><label>お名前 <small>必須</small><input name="name" autocomplete="name" maxlength="80" required></label>
+    <label>メールアドレス <small>必須</small><input name="email" type="email" autocomplete="email" maxlength="254" required></label></div>
+    <div class="enquiry-cols"><label>電話番号 <small>任意</small><input name="phone" type="tel" autocomplete="tel" maxlength="30"></label>
+    <label>ご相談の種類 <small>必須</small><select name="subject" required><option value="">お選びください</option><option>施術・メニュー</option><option>ご来店について</option><option>採用・見学</option><option>その他</option></select></label></div>
+    <label>お問い合わせ内容 <small>必須</small><textarea name="message" rows="5" minlength="1" maxlength="2000" required></textarea></label>
+    <label hidden aria-hidden="true">ウェブサイト<input name="website" tabindex="-1" autocomplete="off"></label>
+    <p class="contact-use">お預かりした情報はgraceがお問い合わせの確認・返信に使用し、受付から90日で削除します。</p>
+    <label class="consent"><input name="consent" type="checkbox" required> 個人情報の取り扱いに同意する</label>
+    <button class="cta" type="submit" disabled>送信する</button><p role="status" aria-live="polite" data-form-status></p>
+  </form></details>
+</section>
