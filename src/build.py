@@ -83,8 +83,27 @@ def style_detail(i):
     nxt=STYLE[i%len(STYLE)]
     return crumb(ja,('styles','ヘアスタイル'))+f'''<div class="wrap style-sheet"><div class="sheet-image">{pic('style-'+str(i),ja,priority=True)}</div><article><span class="over">{length} ／ Hair design</span><h1 lang="en">{en}</h1><h2>{ja}</h2><p class="lead">{desc}</p><div class="styletip"><h3>オーダーのヒント</h3><p>{note}</p></div>{link('menu',cat+'の料金を見る '+right,'under',catlink)}<div class="sheet-action">{reserve('このスタイルを相談・予約')}</div></article></div><nav class="wrap spread-foot" aria-label="スタイルナビゲーション">{link('styles','← スタイル一覧')}{link('styles/'+nxt[0],'次のスタイル　'+nxt[2]+' →')}</nav>'''
 def staff():
-    names=[('YUICHIRO','代表 ／ カラー＆ヘアケアソムリエ','横顔のバランスや、髪が乾いたときの形を見ながら、ご自宅で再現しやすいスタイルをつくります。','料理・お菓子作り・園芸'),('JUN','スタイリスト ／ カラー＆ヘアケアソムリエ','じっくりお話を伺い、ボブのラインやカラーの透明感など、なりたい雰囲気を一緒に形にします。','映画・パワースポット巡り'),('MAHO','ケアリスト ／ カラーソムリエ','丁寧なカウンセリングを通じて、カラーを楽しむ髪のツヤや手触りを整えるケアをご提案します。','音楽・韓国ドラマ・食べ歩き'),('ASAKI','ケアリスト','お客様が肩の力を抜いて過ごせるように。ご来店時のご挨拶からシャンプーまで、心地よい時間を大切にします。','レコード・サウナ・絵・古着屋巡り')]
-    return crumb('スタッフ')+intro('Our team','スタッフ紹介','髪を切る人、色を考える人、地肌と向き合う人。<br>鷹匠でお迎えする、graceのチームです。')+'<div class="wrap"><div class="portraits" aria-label="graceのスタッフ写真">'+''.join(pic('team-'+str(i),'graceのスタッフ',priority=i<=2) for i in range(1,5))+'</div><div class="staff-profiles">'+''.join(f'<article><span class="over">{role}</span><h2>{name}</h2><p>{bio}</p><div class="hobby">休日の楽しみ　{hobby}</div></article>' for name,role,bio,hobby in names)+'</div><div class="endbook">'+out(HPB+'stylist/','担当者・出勤スケジュールを見る '+arrow,'cta')+'</div></div>'
+    profiles = [
+        ('team-1', 'JUN', 'ジュン', 'スタイリスト ／ カラー＆ヘアケアソムリエ',
+         'じっくりお話を伺い、ボブのラインやカラーの透明感など、なりたい雰囲気を一緒に形にします。', '映画・パワースポット巡り'),
+        ('team-2', 'YUICHIRO', 'ユウイチロウ', '代表 ／ カラー＆ヘアケアソムリエ',
+         '横顔のバランスや、髪が乾いたときの形を見ながら、ご自宅で再現しやすいスタイルをつくります。', '料理・お菓子作り・園芸'),
+        ('team-3', 'MAHO', 'マホ', 'ケアリスト ／ カラーソムリエ',
+         '丁寧なカウンセリングを通じて、カラーを楽しむ髪のツヤや手触りを整えるケアをご提案します。', '音楽・韓国ドラマ・食べ歩き'),
+        ('team-4', 'ASAKI', 'アサキ', 'ケアリスト',
+         'お客様が肩の力を抜いて過ごせるように。ご来店時のご挨拶からシャンプーまで、心地よい時間を大切にします。', 'レコード・サウナ・絵・古着屋巡り'),
+    ]
+    cards = []
+    for photo,name,kana,role,bio,hobby in profiles:
+        title_id = 'staff-' + name.lower()
+        cards.append(f'''<article class="staff-card" aria-labelledby="{title_id}">
+          <figure>{pic(photo, name+'（'+kana+'）のスタッフ写真', 'staff-photo', priority=photo=='team-1')}
+            <figcaption><h2 id="{title_id}"><span lang="en">{name}</span><small>{kana}</small></h2>
+            <p class="staff-role">{role}</p></figcaption></figure>
+          <p class="staff-bio">{bio}</p><p class="hobby">休日の楽しみ　{hobby}</p></article>''')
+    return (crumb('スタッフ') + intro('Our team','スタッフ紹介','髪を切る人、色を考える人、地肌と向き合う人。<br>鷹匠でお迎えする、graceのチームです。')
+            + '<div class="wrap"><div class="staff-profiles">' + ''.join(cards) + '</div><div class="endbook">'
+            + out(HPB+'stylist/','担当者・出勤スケジュールを見る '+arrow,'cta') + '</div></div>')
 def journal():
     return crumb('お知らせ')+intro('Journal','お知らせ・サロン日記','スタイルのご提案と、鷹匠のお店での日々。<br>スタッフが綴った記事をお届けします。')+'<div class="wrap journal">'+''.join(out(HPB+'blog/'+key+'.html',f'<div class="journal-meta"><time>{d}</time><small>{cat}</small></div><div><h2>{title}</h2><p>{blurb}</p><small>文　{who}</small></div>{arrow}','journal-row') for d,cat,title,who,blurb,key in NEWS)+'<div class="endbook">'+out(HPB+'blog/','スタッフブログの全記事へ '+arrow,'under')+'</div></div>'
 def contact():
